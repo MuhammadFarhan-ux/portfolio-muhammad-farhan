@@ -119,12 +119,14 @@ function initNavigation() {
   const navItems = document.querySelectorAll('.nav-item');
   const sections = document.querySelectorAll('section');
 
-  // Multi-page Active Nav Link Detection
-  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  // Multi-page Active Nav Link Detection (supports both file.html and clean route /about)
+  const pathname = window.location.pathname.replace(/^\/|\/$/g, '');
+  const currentPath = pathname.split('/').pop() || 'index.html';
+  const cleanPath = currentPath.replace('.html', '').toLowerCase();
   
   navItems.forEach(item => {
-    const itemHref = item.getAttribute('href');
-    if (itemHref === currentPath || (currentPath === '' && itemHref === 'index.html')) {
+    const itemHref = (item.getAttribute('href') || '').replace('.html', '').toLowerCase();
+    if (itemHref === cleanPath || (cleanPath === '' && (itemHref === 'index' || itemHref === '')) || (cleanPath === 'index' && (itemHref === 'index' || itemHref === ''))) {
       navItems.forEach(n => n.classList.remove('active'));
       item.classList.add('active');
     }
@@ -132,46 +134,35 @@ function initNavigation() {
 
   // Mobile Hamburger Toggle
   if (menuIcon && navbar) {
-    menuIcon.addEventListener('click', () => {
+    menuIcon.addEventListener('click', (e) => {
+      e.stopPropagation();
       navbar.classList.toggle('active');
       const isOpen = navbar.classList.contains('active');
       menuIcon.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
     });
 
-    // Close menu when clicking link
+    // Close menu when clicking any nav item
     navItems.forEach(item => {
       item.addEventListener('click', () => {
         navbar.classList.remove('active');
         menuIcon.innerHTML = '<i class="fa-solid fa-bars"></i>';
       });
     });
+
+    // Close mobile navbar when tapping anywhere outside
+    document.addEventListener('click', (e) => {
+      if (navbar.classList.contains('active') && !navbar.contains(e.target) && !menuIcon.contains(e.target)) {
+        navbar.classList.remove('active');
+        menuIcon.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      }
+    });
   }
 
-  // Scroll Spy Active Link Highlighting (for single-page anchor sections if present)
+  // Sticky Header Shadow
   window.addEventListener('scroll', () => {
-    const top = window.scrollY;
-
-    if (sections.length > 1) {
-      sections.forEach(sec => {
-        const offset = sec.offsetTop - 150;
-        const height = sec.offsetHeight;
-        const id = sec.getAttribute('id');
-
-        if (top >= offset && top < offset + height) {
-          navItems.forEach(item => {
-            if (item.getAttribute('href') === `#${id}`) {
-              navItems.forEach(n => n.classList.remove('active'));
-              item.classList.add('active');
-            }
-          });
-        }
-      });
-    }
-
-    // Sticky Header Shadow
     const header = document.getElementById('header');
     if (header) {
-      header.classList.toggle('sticky', window.scrollY > 100);
+      header.classList.toggle('sticky', window.scrollY > 50);
     }
   });
 }
@@ -372,12 +363,9 @@ Languages: English (Fluent), Urdu (Fluent)`,
   • Explainers       : SHAP (Shapley Additive exPlanations) + LIME (Local Interpretable Model-agnostic Explanations)
   • Target           : Windows Executable (.exe) binary classification with transparent feature attribution.`,
 
-    projects: `Featured Projects:
-  1. MalwareXAI              - Explainable AI Malware Detection with Random Forest + SHAP & LIME
-  2. Halwan Lost & Found     - Full-Stack Community Platform with Bcrypt, CSRF, & Prepared Statements
-  3. CyberMetrics React App  - Real-Time Security Operations Dashboard (React.js + Flask)
-  4. CyberSentinel Scanner   - Automated Web Vulnerability Scanner
-  5. NetTrace Sniffer        - Low-Level Network Packet Sniffer`,
+    projects: `Featured Flagship Projects:
+  1. MalwareXAI          - Explainable AI Malware Detection with Random Forest + SHAP & LIME (React.js + Flask)
+  2. Halwan Lost & Found - Full-Stack Community Platform with Bcrypt Auth, CSRF, & Prepared Statements (PHP/MySQL)`,
 
     contact: `Contact Muhammad Farhan:
   • Location  : Dubai, United Arab Emirates
