@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio & Projects | Muhammad Farhan</title>
+  <meta name="description" content="Featured Projects of Muhammad Farhan — MalwareXAI, Halwan Lost & Found Portal, CyberMetrics React App, and CyberSentinel.">
+  <meta name="author" content="Muhammad Farhan">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Fullscreen 3D Background WebGL Canvas -->
+  <canvas id="bg-3d-canvas" class="bg-3d-canvas"></canvas>
+
+  <!-- SEPARATE FIXED HEADER NAVIGATION -->
+  <header class="header" id="header">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-txt">Portfolio</span><span class="logo-dot">.</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="about.html" class="nav-item">About</a>
+        <a href="services.html" class="nav-item">Services</a>
+        <a href="portfolio.html" class="nav-item active">Portfolio</a>
+        <a href="terminal.html" class="nav-item">Terminal</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+      </nav>
+
+      <!-- Nav Controls -->
+      <div class="nav-controls">
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
+          <i class="fa-solid fa-moon dark-icon"></i>
+          <i class="fa-solid fa-sun light-icon"></i>
+        </button>
+
+        <button id="menu-icon" class="menu-icon" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- PORTFOLIO SECTION PAGE -->
+    <section class="page-section" id="portfolio-page">
+      <h2 class="heading">Featured <span>Projects</span></h2>
+      <p class="section-lead">
+        Flagship projects engineered with a focus on Explainable AI threat classification, secure database design, and modern AI-assisted web architecture.
+      </p>
+
+      <!-- Filter Tabs -->
+      <div class="portfolio-filters">
+        <button class="filter-btn active" data-filter="all">All Projects (2)</button>
+        <button class="filter-btn" data-filter="security">Explainable AI (MalwareXAI)</button>
+        <button class="filter-btn" data-filter="web">Full-Stack Web (Halwan)</button>
+      </div>
+
+      <div class="portfolio-container two-projects-grid">
+        
+        <!-- Project 1: MalwareXAI -->
+        <div class="portfolio-box featured-project" data-category="security">
+          <div class="portfolio-thumb security-bg">
+            <i class="fa-solid fa-virus-slash thumb-icon"></i>
+            <span class="thumb-badge">Explainable AI (SHAP & LIME)</span>
+          </div>
+          <div class="portfolio-layer">
+            <h4>MalwareXAI</h4>
+            <p>AI malware detection application using Random Forest, SHAP, and LIME interpretability for Windows PE files.</p>
+            <div class="layer-links">
+              <button class="layer-icon-btn open-modal-btn" data-project="malwarexai" title="View Case Study">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </button>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="layer-icon-btn" title="GitHub Code">
+                <i class="fa-brands fa-github"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2: Halwan Lost & Found -->
+        <div class="portfolio-box featured-project" data-category="web">
+          <div class="portfolio-thumb web-bg">
+            <i class="fa-solid fa-magnifying-glass-location thumb-icon"></i>
+            <span class="thumb-badge">PHP / MySQL Full-Stack</span>
+          </div>
+          <div class="portfolio-layer">
+            <h4>Halwan Lost & Found</h4>
+            <p>Full-stack recovery platform with RBAC, bcrypt auth, CSRF, prepared SQL, & safe upload validation.</p>
+            <div class="layer-links">
+              <button class="layer-icon-btn open-modal-btn" data-project="halwan" title="View Case Study">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              </button>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="layer-icon-btn" title="GitHub Code">
+                <i class="fa-brands fa-github"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="portfolio-bottom-cta">
+        <p>Looking for an IT Support Technician or developer with Explainable AI & Web knowledge?</p>
+        <div class="services-cta-btns" style="justify-content: center;">
+          <a href="assets/Muhammad_Farhan_CV.pdf" download="Muhammad_Farhan_CV.pdf" class="btn">
+            <i class="fa-solid fa-file-arrow-down"></i> Download Farhan's CV
+          </a>
+          <a href="contact.html" class="btn btn-secondary">Get In Touch &rarr;</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-text">
+      <p>Copyright &copy; 2026 by Muhammad Farhan | All Rights Reserved.</p>
+    </div>
+
+    <div class="footer-email-link">
+      <i class="fa-regular fa-envelope"></i> <a href="mailto:syedfarhansaif@gmail.com">syedfarhansaif@gmail.com</a>
+    </div>
+
+    <div class="footer-iconTop">
+      <a href="#portfolio-page" title="Back to Top"><i class="fa-solid fa-arrow-up"></i></a>
+    </div>
+  </footer>
+
+  <!-- CASE STUDY MODAL -->
+  <div class="modal-overlay" id="project-modal" aria-hidden="true" role="dialog">
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close-btn" aria-label="Close modal">&times;</button>
+      <div class="modal-body" id="modal-body-content">
+        <!-- Injected dynamically via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

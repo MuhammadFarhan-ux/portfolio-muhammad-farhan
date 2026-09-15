@@ -1,299 +1,80 @@
 /**
- * Muhammad Farhan (M Farhan) — 3D Animated Portfolio Script
- * Junior Cybersecurity Analyst & Full-Stack Web Developer
- * Powered by Three.js WebGL & Interactive 3D Tilt Physics
+ * Muhammad Farhan (M Farhan) — Portfolio Script
+ * Matching Reference Design with Auto Dark/Light Support & 3D WebGL
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize 3D WebGL Canvas
-  initThreeJSBackground();
-  initMini3DViewport();
-  init3DCardTiltPhysics();
-
-  // Initialize UI & Feature Modules
-  initThemeToggle();
+  initThemeManager();
   initDynamicTyping();
-  initMobileNavigation();
-  initScrollSpy();
+  initNavigation();
   initProjectFiltering();
   initProjectModals();
   initInteractiveTerminal();
   initContactForm();
+  initCopyEmailButtons();
+  initThreeJSBackground();
   initDownloadCV();
 });
 
 /* ==========================================================================
-   1. THREE.JS 3D WEBGL CYBER BACKGROUND ENGINE
+   1. AUTO DARK / LIGHT THEME MANAGER (SYSTEM DETECTION + MANUAL TOGGLE)
    ========================================================================== */
-let threeScene, threeCamera, threeRenderer;
-let particleSystem, cyberMeshGroup, cyberPolyhedron;
-let mouseX = 0, mouseY = 0;
-let targetX = 0, targetY = 0;
-let warpSpeedMultiplier = 1;
-
-function initThreeJSBackground() {
-  const canvas = document.getElementById('bg-3d-canvas');
-  if (!canvas || typeof THREE === 'undefined') return;
-
-  // 1. Setup Scene, Camera & Renderer
-  threeScene = new THREE.Scene();
-  threeCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
-  threeCamera.position.z = 500;
-
-  threeRenderer = new THREE.WebGLRenderer({
-    canvas: canvas,
-    alpha: true,
-    antialias: true
-  });
-  threeRenderer.setSize(window.innerWidth, window.innerHeight);
-  threeRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  // 2. Create 3D Cyber Particle Network
-  const particleCount = 1400;
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
-  const colors = new Float32Array(particleCount * 3);
-
-  const colorCyan = new THREE.Color(0x00f0ff);
-  const colorGreen = new THREE.Color(0x10b981);
-  const colorPurple = new THREE.Color(0x8b5cf6);
-
-  for (let i = 0; i < particleCount * 3; i += 3) {
-    // Distribute in a spherical cloud around origin
-    positions[i] = (Math.random() - 0.5) * 1400;
-    positions[i + 1] = (Math.random() - 0.5) * 1400;
-    positions[i + 2] = (Math.random() - 0.5) * 1000;
-
-    // Mixed cyber security palette
-    const rand = Math.random();
-    const chosenColor = rand < 0.5 ? colorCyan : (rand < 0.8 ? colorGreen : colorPurple);
-    colors[i] = chosenColor.r;
-    colors[i + 1] = chosenColor.g;
-    colors[i + 2] = chosenColor.b;
-  }
-
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-
-  // Custom circular particle texture via canvas
-  const particleMaterial = new THREE.PointsMaterial({
-    size: 3.5,
-    vertexColors: true,
-    transparent: true,
-    opacity: 0.75,
-    blending: THREE.AdditiveBlending
-  });
-
-  particleSystem = new THREE.Points(geometry, particleMaterial);
-  threeScene.add(particleSystem);
-
-  // 3. Create 3D Orbiting Cyber Shield Mesh (Icosahedron Wireframe)
-  cyberMeshGroup = new THREE.Group();
-
-  const icoGeometry = new THREE.IcosahedronGeometry(120, 1);
-  const icoWireframe = new THREE.WireframeGeometry(icoGeometry);
-  const lineMaterial = new THREE.LineBasicMaterial({
-    color: 0x00f0ff,
-    transparent: true,
-    opacity: 0.35,
-    linewidth: 1.5
-  });
-
-  cyberPolyhedron = new THREE.LineSegments(icoWireframe, lineMaterial);
-  cyberMeshGroup.add(cyberPolyhedron);
-
-  // Inner floating core
-  const coreGeometry = new THREE.OctahedronGeometry(60, 0);
-  const coreMaterial = new THREE.MeshBasicMaterial({
-    color: 0x10b981,
-    wireframe: true,
-    transparent: true,
-    opacity: 0.6
-  });
-  const innerCore = new THREE.Mesh(coreGeometry, coreMaterial);
-  cyberMeshGroup.add(innerCore);
-
-  cyberMeshGroup.position.set(220, 50, -100);
-  threeScene.add(cyberMeshGroup);
-
-  // 4. Mouse & Touch Interactive Parallax Tracking
-  document.addEventListener('mousemove', (e) => {
-    mouseX = (e.clientX - window.innerWidth / 2);
-    mouseY = (e.clientY - window.innerHeight / 2);
-  });
-
-  document.addEventListener('touchmove', (e) => {
-    if (e.touches && e.touches.length > 0) {
-      mouseX = (e.touches[0].clientX - window.innerWidth / 2);
-      mouseY = (e.touches[0].clientY - window.innerHeight / 2);
-    }
-  }, { passive: true });
-
-  // 5. Speed Toggle
-  const fxToggleBtn = document.getElementById('fx-3d-toggle');
-  if (fxToggleBtn) {
-    fxToggleBtn.addEventListener('click', () => {
-      warpSpeedMultiplier = warpSpeedMultiplier === 1 ? 3 : (warpSpeedMultiplier === 3 ? 0.4 : 1);
-      showToast(`3D Warp Speed: ${warpSpeedMultiplier}x`, 'info');
-    });
-  }
-
-  // 6. Window Resize Listener
-  window.addEventListener('resize', () => {
-    threeCamera.aspect = window.innerWidth / window.innerHeight;
-    threeCamera.updateProjectionMatrix();
-    threeRenderer.setSize(window.innerWidth, window.innerHeight);
-  });
-
-  // 7. 3D Render Loop (60 FPS)
-  function animate3D() {
-    requestAnimationFrame(animate3D);
-
-    const speed = 0.001 * warpSpeedMultiplier;
-
-    // Rotate particles
-    if (particleSystem) {
-      particleSystem.rotation.y += speed * 0.7;
-      particleSystem.rotation.x += speed * 0.3;
-    }
-
-    // Rotate 3D cyber mesh
-    if (cyberMeshGroup) {
-      cyberMeshGroup.rotation.x += speed * 2;
-      cyberMeshGroup.rotation.y += speed * 2.5;
-      cyberPolyhedron.rotation.z += speed * 1.5;
-    }
-
-    // Smooth camera mouse parallax lerp
-    targetX = mouseX * 0.25;
-    targetY = mouseY * 0.25;
-
-    threeCamera.position.x += (targetX - threeCamera.position.x) * 0.04;
-    threeCamera.position.y += (-targetY - threeCamera.position.y) * 0.04;
-    threeCamera.lookAt(threeScene.position);
-
-    threeRenderer.render(threeScene, threeCamera);
-  }
-
-  animate3D();
-}
-
-/* ==========================================================================
-   2. HERO MINI 3D INTERACTIVE VIEWPORT
-   ========================================================================== */
-function initMini3DViewport() {
-  const container = document.getElementById('card-3d-viewport');
-  if (!container || typeof THREE === 'undefined') return;
-
-  const width = container.clientWidth || 300;
-  const height = container.clientHeight || 110;
-
-  const miniScene = new THREE.Scene();
-  const miniCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-  miniCamera.position.z = 7;
-
-  const miniRenderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-  miniRenderer.setSize(width, height);
-  miniRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  container.appendChild(miniRenderer.domElement);
-
-  // Floating Cyber Diamond
-  const octaGeo = new THREE.OctahedronGeometry(2.2, 0);
-  const wireGeo = new THREE.WireframeGeometry(octaGeo);
-  const octaMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.8 });
-  const diamondMesh = new THREE.LineSegments(wireGeo, octaMat);
-  miniScene.add(diamondMesh);
-
-  // Orbiting ring
-  const ringGeo = new THREE.TorusGeometry(3.2, 0.05, 8, 30);
-  const ringMat = new THREE.MeshBasicMaterial({ color: 0x10b981, wireframe: true, transparent: true, opacity: 0.5 });
-  const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-  ringMesh.rotation.x = Math.PI / 3;
-  miniScene.add(ringMesh);
-
-  function animateMini() {
-    requestAnimationFrame(animateMini);
-    diamondMesh.rotation.y += 0.015;
-    diamondMesh.rotation.x += 0.008;
-    ringMesh.rotation.z += 0.01;
-    miniRenderer.render(miniScene, miniCamera);
-  }
-
-  animateMini();
-
-  window.addEventListener('resize', () => {
-    const w = container.clientWidth;
-    const h = container.clientHeight;
-    miniCamera.aspect = w / h;
-    miniCamera.updateProjectionMatrix();
-    miniRenderer.setSize(w, h);
-  });
-}
-
-/* ==========================================================================
-   3. 3D INTERACTIVE CARD TILT PHYSICS
-   ========================================================================== */
-function init3DCardTiltPhysics() {
-  const tiltCards = document.querySelectorAll('.tilt-card');
-
-  tiltCards.forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-
-      const rotateX = ((y - centerY) / centerY) * -12; // Max 12 deg tilt
-      const rotateY = ((x - centerX) / centerX) * 12;
-
-      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.02, 1.02, 1.02)`;
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-    });
-  });
-}
-
-/* ==========================================================================
-   4. THEME TOGGLE (DARK / LIGHT MODE)
-   ========================================================================== */
-function initThemeToggle() {
+function initThemeManager() {
   const themeToggleBtn = document.getElementById('theme-toggle');
   const htmlRoot = document.documentElement;
 
-  const savedTheme = localStorage.getItem('mf_portfolio_theme') || 'dark';
-  htmlRoot.setAttribute('data-theme', savedTheme);
+  // 1. Check for manual saved preference in localStorage
+  const savedTheme = localStorage.getItem('mf_portfolio_theme');
 
+  if (savedTheme) {
+    applyTheme(savedTheme);
+  } else {
+    // 2. Auto-detect user's OS/device color scheme
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = systemPrefersDark ? 'dark' : 'light';
+    applyTheme(initialTheme);
+  }
+
+  // 3. Listen for OS theme changes in real-time
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    // Only auto-switch if user hasn't explicitly set a preference
+    if (!localStorage.getItem('mf_portfolio_theme')) {
+      const newTheme = e.matches ? 'dark' : 'light';
+      applyTheme(newTheme);
+      showToast(`Device theme changed: ${newTheme.toUpperCase()} mode active`, 'info');
+    }
+  });
+
+  // 4. Manual toggle click
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener('click', () => {
-      const currentTheme = htmlRoot.getAttribute('data-theme');
+      const currentTheme = htmlRoot.getAttribute('data-theme') || 'dark';
       const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
       
-      htmlRoot.setAttribute('data-theme', newTheme);
+      applyTheme(newTheme);
       localStorage.setItem('mf_portfolio_theme', newTheme);
-      
-      showToast(`Theme switched to ${newTheme.toUpperCase()}`, 'info');
+      showToast(`Switched to ${newTheme.toUpperCase()} theme`, 'info');
     });
+  }
+
+  function applyTheme(theme) {
+    htmlRoot.setAttribute('data-theme', theme);
   }
 }
 
 /* ==========================================================================
-   5. DYNAMIC HERO TYPING EFFECT
+   2. DYNAMIC TYPING EFFECT
    ========================================================================== */
 function initDynamicTyping() {
   const typedTarget = document.getElementById('typed-text');
   if (!typedTarget) return;
 
   const roles = [
-    'Junior Cybersecurity Analyst',
-    '3D WebGL & Full-Stack Developer',
-    'Explainable AI (SHAP & LIME Interpretability)',
-    'Creator of MalwareXAI (Random Forest Detection)',
-    'Halwan Lost & Found Portal Architect',
-    'Secure Coding (Bcrypt, CSRF, Prepared SQL)'
+    'IT Support Technician',
+    'Cybersecurity Analyst',
+    'Hardware & PC Repair Specialist',
+    'MalwareXAI Creator (SHAP & LIME)',
+    'Based in Dubai, UAE'
   ];
 
   let roleIdx = 0;
@@ -330,71 +111,96 @@ function initDynamicTyping() {
 }
 
 /* ==========================================================================
-   6. MOBILE NAVIGATION & HAMBURGER
+   3. SEPARATE NAVBAR, MULTI-PAGE ACTIVE STATE & MOBILE MENU
    ========================================================================== */
-function initMobileNavigation() {
-  const mobileToggle = document.getElementById('mobile-toggle');
-  const navMenu = document.getElementById('nav-menu');
-  const navLinks = document.querySelectorAll('.nav-link');
+function initNavigation() {
+  const menuIcon = document.getElementById('menu-icon');
+  const navbar = document.getElementById('navbar');
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('section');
 
-  if (!mobileToggle || !navMenu) return;
-
-  mobileToggle.addEventListener('click', () => {
-    navMenu.classList.toggle('active');
-    const isOpen = navMenu.classList.contains('active');
-    mobileToggle.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+  // Multi-page Active Nav Link Detection
+  const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+  
+  navItems.forEach(item => {
+    const itemHref = item.getAttribute('href');
+    if (itemHref === currentPath || (currentPath === '' && itemHref === 'index.html')) {
+      navItems.forEach(n => n.classList.remove('active'));
+      item.classList.add('active');
+    }
   });
 
-  navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      if (navMenu.classList.contains('active')) {
-        navMenu.classList.remove('active');
-        mobileToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
-      }
+  // Mobile Hamburger Toggle
+  if (menuIcon && navbar) {
+    menuIcon.addEventListener('click', () => {
+      navbar.classList.toggle('active');
+      const isOpen = navbar.classList.contains('active');
+      menuIcon.innerHTML = isOpen ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
     });
-  });
 
-  document.addEventListener('click', (e) => {
-    if (navMenu.classList.contains('active') && !navMenu.contains(e.target) && !mobileToggle.contains(e.target)) {
-      navMenu.classList.remove('active');
-      mobileToggle.innerHTML = '<i class="fa-solid fa-bars"></i>';
+    // Close menu when clicking link
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navbar.classList.remove('active');
+        menuIcon.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      });
+    });
+  }
+
+  // Scroll Spy Active Link Highlighting (for single-page anchor sections if present)
+  window.addEventListener('scroll', () => {
+    const top = window.scrollY;
+
+    if (sections.length > 1) {
+      sections.forEach(sec => {
+        const offset = sec.offsetTop - 150;
+        const height = sec.offsetHeight;
+        const id = sec.getAttribute('id');
+
+        if (top >= offset && top < offset + height) {
+          navItems.forEach(item => {
+            if (item.getAttribute('href') === `#${id}`) {
+              navItems.forEach(n => n.classList.remove('active'));
+              item.classList.add('active');
+            }
+          });
+        }
+      });
+    }
+
+    // Sticky Header Shadow
+    const header = document.getElementById('header');
+    if (header) {
+      header.classList.toggle('sticky', window.scrollY > 100);
     }
   });
 }
 
 /* ==========================================================================
-   7. SCROLL SPY & ACTIVE NAV LINK
+   4. 1-CLICK EMAIL COPY
    ========================================================================== */
-function initScrollSpy() {
-  const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav-link');
+function initCopyEmailButtons() {
+  const copyBtns = document.querySelectorAll('.copy-email-btn');
 
-  window.addEventListener('scroll', () => {
-    const scrollY = window.pageYOffset;
-
-    sections.forEach(section => {
-      const sectionHeight = section.offsetHeight;
-      const sectionTop = section.offsetTop - 120;
-      const sectionId = section.getAttribute('id');
-
-      if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-        navLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${sectionId}`) {
-            link.classList.add('active');
-          }
-        });
-      }
+  copyBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const email = btn.getAttribute('data-email') || 'syedfarhansaif@gmail.com';
+      
+      navigator.clipboard.writeText(email).then(() => {
+        showToast(`Copied to clipboard: ${email}`, 'success');
+      }).catch(() => {
+        showToast(`Email: ${email}`, 'info');
+      });
     });
   });
 }
 
 /* ==========================================================================
-   8. PROJECT FILTERING
+   5. PORTFOLIO PROJECT FILTERING
    ========================================================================== */
 function initProjectFiltering() {
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const projectCards = document.querySelectorAll('.project-card');
+  const portfolioBoxes = document.querySelectorAll('.portfolio-box');
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -403,19 +209,19 @@ function initProjectFiltering() {
 
       const filterValue = btn.getAttribute('data-filter');
 
-      projectCards.forEach(card => {
-        const category = card.getAttribute('data-category');
+      portfolioBoxes.forEach(box => {
+        const category = box.getAttribute('data-category');
         if (filterValue === 'all' || category === filterValue) {
-          card.style.display = 'flex';
+          box.style.display = 'flex';
           setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'perspective(1000px) scale(1)';
+            box.style.opacity = '1';
+            box.style.transform = 'scale(1)';
           }, 10);
         } else {
-          card.style.opacity = '0';
-          card.style.transform = 'perspective(1000px) scale(0.95)';
+          box.style.opacity = '0';
+          box.style.transform = 'scale(0.95)';
           setTimeout(() => {
-            card.style.display = 'none';
+            box.style.display = 'none';
           }, 200);
         }
       });
@@ -424,88 +230,34 @@ function initProjectFiltering() {
 }
 
 /* ==========================================================================
-   9. PROJECT MODALS
+   6. PROJECT DETAILS MODAL
    ========================================================================== */
 const projectData = {
   malwarexai: {
-    title: 'MalwareXAI — Explainable AI Malware Detection Engine',
-    tag: 'Flagship Machine Learning & XAI Project',
-    overview: 'MalwareXAI is an innovative Explainable AI (XAI) security platform designed to classify malicious executables and explain machine learning decisions to security analysts. Utilizing Random Forest classification alongside SHAP (Shapley Additive exPlanations) and LIME (Local Interpretable Model-agnostic Explanations), MalwareXAI eliminates the "black box" nature of AI threat detection.',
+    title: 'MalwareXAI — Explainable AI Malware Detection Platform',
+    tag: 'Flagship Academic Project (Cybersecurity & AI)',
+    overview: 'MalwareXAI is an Explainable AI (XAI) threat classification system engineered using Random Forest machine learning paired with SHAP (Shapley Additive exPlanations) and LIME (Local Interpretable Model-agnostic Explanations) to analyze Windows executable (.exe) files and deliver transparent, explainable feature attributions for security analysts.',
     features: [
-      'Random Forest classifier trained on static PE headers, byte entropy, and import tables.',
-      'SHAP global feature importance mapping to highlight universal malware characteristics.',
-      'LIME local surrogate models providing granular explanations for why a specific binary was flagged.',
-      'Interactive analyst dashboard built with Python (Flask) and JavaScript for rapid triage.',
-      'Significant reduction in false positives through transparent feature attribution.'
+      'Random Forest classifier trained on PE headers, byte entropy, and import tables.',
+      'SHAP global feature impact analysis for universal threat patterns.',
+      'LIME local surrogate models explaining individual file classifications.',
+      'Web-based interface built with React.js and Flask backend API.'
     ],
-    tech: ['Python 3.10+', 'Scikit-Learn (Random Forest)', 'SHAP', 'LIME', 'Flask', 'JavaScript ES6+', 'PEfile'],
-    securityTakeaways: 'Demonstrated how explainability builds trust between AI systems and SOC teams, enabling actionable mitigation rather than unverified alerts.'
+    tech: ['Python', 'Random Forest', 'SHAP', 'LIME', 'React.js', 'Flask'],
+    securityTakeaways: 'Eliminated the AI black box to build trust between automated classification systems and security analysts.'
   },
   halwan: {
-    title: 'Halwan Lost & Found Portal — Full-Stack Community Platform',
-    tag: 'Flagship Full-Stack Web Platform (PHP/MySQL)',
-    overview: 'Halwan Lost & Found Portal is an end-to-end community and campus platform facilitating secure lost item reporting, claim verification, and admin moderation. Built in PHP and MySQL with a rigorous focus on secure coding practices to safeguard user data and prevent exploitation.',
+    title: 'Halwan Lost & Found Portal — Full-Stack Web Platform',
+    tag: 'Full-Stack Web Architecture (PHP / MySQL)',
+    overview: 'A full-stack community lost-and-found recovery platform designed with AI-assisted modern UI and engineered with secure-by-design backend standards in PHP and MySQL.',
     features: [
-      'Comprehensive Role-Based Access Control (Admin, Verifier, Regular User) with custom admin dashboards.',
-      'Bcrypt password hashing with salt and secure session cookie flags (HttpOnly, SameSite).',
-      'Full CSRF token protection on all state-changing POST and AJAX forms.',
+      'Role-Based Access Control (Admin, Verifier, Regular User) with custom dashboard views.',
+      'Bcrypt password hashing with salt and CSRF token protection on all forms.',
       'Parameterized prepared SQL statements protecting against SQL Injection (SQLi).',
-      'Robust file-upload pipeline with MIME-type verification, EXIF metadata stripping, and size validation.',
-      'Responsive UI design optimized across smartphones, tablets, and desktop workstations.'
+      'Secure MIME and EXIF file validation pipeline for safe user image uploads.'
     ],
-    tech: ['PHP 8.x', 'MySQL', 'JavaScript (ES6+)', 'HTML5 & CSS3', 'Bcrypt', 'CSRF Protection', 'Prepared Statements'],
-    securityTakeaways: 'Engineered a resilient zero-trust web application adhering strictly to OWASP secure development principles.'
-  },
-  cybermetrics: {
-    title: 'CyberMetrics — React.js Security Operations App',
-    tag: 'Frontend Framework & Responsive UI',
-    overview: 'A high-performance single-page application built with React.js for real-time security telemetry monitoring, log analysis, and firewall alerts.',
-    features: [
-      'Modular React component hierarchy with reusable UI widgets and state hooks.',
-      'Responsive design adapting gracefully across mobile, tablet, and widescreen monitors.',
-      'Live metric charts with asynchronous polling and client-side sanitization.',
-      'Theme engine supporting seamless dark and light mode preferences.'
-    ],
-    tech: ['React.js', 'JavaScript (ES6+)', 'CSS Modules', 'Flask API Integration', 'Responsive Design'],
-    securityTakeaways: 'Demonstrates modern frontend engineering with strict client-side sandboxing and minimal render latency.'
-  },
-  cybersentinel: {
-    title: 'CyberSentinel — Automated Web Application Vulnerability Scanner',
-    tag: 'Proactive Security & Audit Tool',
-    overview: 'CyberSentinel is a modular automated vulnerability scanner created in Python and C++ to audit web applications against common security vulnerabilities. It crawls site structures, checks HTTP security headers, detects SQL injection vulnerabilities, and audits for XSS reflection.',
-    features: [
-      'Asynchronous multithreaded socket crawler with customizable payload injection engines.',
-      'Checks for essential security headers (Content-Security-Policy, HSTS, X-Frame-Options).',
-      'Automated generation of audit reports formatted with remediation steps and CVSS scores.',
-      'Low-level C++ network routines for high-speed endpoint verification.'
-    ],
-    tech: ['Python', 'C++', 'Asyncio / Sockets', 'BeautifulSoup4', 'OWASP Benchmarks'],
-    securityTakeaways: 'Provided hands-on experience identifying and remediating real-world injection and configuration flaws in live web apps.'
-  },
-  securegate: {
-    title: 'SecureGate — Cryptographic Authentication & RBAC Engine',
-    tag: 'Enterprise Authentication Microservice',
-    overview: 'A robust identity and access management microservice featuring JWT dual-token rotation, redis-based token revocation blacklists, bcrypt password salting, brute-force throttling, and RFC 6238-compliant Two-Factor Authentication (TOTP).',
-    features: [
-      'Short-lived Access Tokens paired with rotating Refresh Tokens.',
-      'Sliding window rate-limiter using Redis to defeat credential stuffing attacks.',
-      'TOTP QR code generation and verification for Google Authenticator / Authy.',
-      'Granular permission scopes for role-based microservice authorization.'
-    ],
-    tech: ['Node.js', 'Express', 'Redis', 'PostgreSQL', 'Speakeasy (TOTP)', 'JWT'],
-    securityTakeaways: 'Built to demonstrate enterprise-grade defensive practices against session hijacking and account takeovers.'
-  },
-  nettrace: {
-    title: 'NetTrace — Low-Level Network Packet Sniffer & Anomaly Monitor',
-    tag: 'Systems & Network Engineering (C++)',
-    overview: 'NetTrace captures raw Ethernet frames, dissects IP, TCP, and UDP headers in real-time, and flags suspicious network patterns such as port sweeps, SYN flood attempts, and DNS tunneling anomalies.',
-    features: [
-      'Direct raw socket interaction in C++ with minimal CPU overhead.',
-      'Protocol breakdown with customizable packet filters (BPF syntax).',
-      'Export capability to .PCAP format for deeper Wireshark forensic investigation.'
-    ],
-    tech: ['C++', 'Python', 'Raw Sockets', 'Libpcap', 'Linux Networking'],
-    securityTakeaways: 'Strengthened low-level TCP/IP understanding and intrusion detection fundamentals.'
+    tech: ['PHP 8.x', 'MySQL', 'JavaScript', 'HTML5/CSS3', 'Bcrypt', 'CSRF Tokens'],
+    securityTakeaways: 'Zero-trust file upload processing and strict parameterization adhering to OWASP standards.'
   }
 };
 
@@ -538,32 +290,25 @@ function initProjectModals() {
         </ul>
 
         <h4 class="modal-section-title"><i class="fa-solid fa-code"></i> Technologies & Architecture</h4>
-        <div class="project-tech-stack">
-          ${data.tech.map(t => `<span class="tech-badge">${t}</span>`).join('')}
+        <div class="service-tags" style="justify-content: flex-start; margin-bottom: 2rem;">
+          ${data.tech.map(t => `<span>${t}</span>`).join('')}
         </div>
 
         <h4 class="modal-section-title"><i class="fa-solid fa-lock"></i> Security & Engineering Takeaway</h4>
         <p class="modal-overview">${data.securityTakeaways}</p>
 
         <div class="modal-footer-btns">
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
-            <i class="fa-brands fa-github"></i> View GitHub Repository
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn">
+            <i class="fa-brands fa-github"></i> View GitHub Code
           </a>
-          <a href="#contact" class="btn btn-outline modal-discuss-btn">
-            <i class="fa-regular fa-comments"></i> Discuss This Project
+          <a href="mailto:syedfarhansaif@gmail.com" class="btn btn-secondary">
+            <i class="fa-regular fa-envelope"></i> Inquire via Email
           </a>
         </div>
       `;
 
       modalOverlay.classList.add('active');
       document.body.style.overflow = 'hidden';
-
-      const discussBtn = modalBody.querySelector('.modal-discuss-btn');
-      if (discussBtn) {
-        discussBtn.addEventListener('click', () => {
-          closeModal();
-        });
-      }
     });
   });
 
@@ -585,7 +330,7 @@ function initProjectModals() {
 }
 
 /* ==========================================================================
-   10. INTERACTIVE TERMINAL EMULATOR
+   7. INTERACTIVE TERMINAL EMULATOR
    ========================================================================== */
 function initInteractiveTerminal() {
   const terminalInput = document.getElementById('terminal-input');
@@ -600,65 +345,55 @@ function initInteractiveTerminal() {
   • whoami     : Display Muhammad Farhan's bio summary
   • skills     : Display cybersecurity & full-stack skill matrix
   • xai        : Details on Explainable AI (SHAP & LIME) in MalwareXAI
-  • 3d         : Information about the 3D WebGL particle engine
   • projects   : View key projects (MalwareXAI, Halwan Portal, React, etc.)
   • scan       : Execute a simulated web security vulnerability audit
   • contact    : View direct contact information and email
   • clear      : Clear terminal screen`,
 
     whoami: `Name: Muhammad Farhan (M Farhan)
-Role: Junior Cybersecurity Analyst & Full-Stack Web Developer
-Experience: 2 Years Professional Web Engineering & Threat Analysis
-Specializations: 3D WebGL Animations, Explainable AI (SHAP & LIME), Secure Full-Stack Apps, OWASP Audits, Secure Coding (Bcrypt, CSRF, Prepared SQL).`,
+Role: IT Support Technician & Junior Cybersecurity Analyst
+Location: Dubai, United Arab Emirates
+Phone/WhatsApp: +971 52 153 5928
+Email: syedfarhansaif@gmail.com
+Experience: IT Support Intern (SRS Computing LLC - 6 Months)
+Education: BSc Cybersecurity (De Montfort University – Dubai, 09/2025), HND, Pearson BTEC Level 3
+Languages: English (Fluent), Urdu (Fluent)`,
 
-    skills: `Technical Skills Matrix:
-  [Languages]           : JavaScript (ES6+), HTML5, CSS3, PHP, Python, C++, SQL, Bash
-  [Professional Exp]    : Junior Cybersecurity Analyst + 2 Years Professional Web Dev
-  [Secure Practices]    : Bcrypt Hashing, CSRF Tokens, Prepared Statements, File MIME Validation
-  [Machine Learning/XAI]: Random Forest Classifier, SHAP Interpretability, LIME Explanations
-  [Frameworks & 3D]     : Three.js (3D WebGL), React.js (Frontend), Flask (Backend), PHP/MySQL Full-Stack
-  [UI & Design]         : Responsive Web Design (Mobile / Tablet / Desktop) + 3D Tilt Physics`,
+    skills: `Technical Skills Matrix (From Official CV):
+  [IT Support & Systems]  : Windows 10/11, Office 365, Hardware Troubleshooting, Desktop/Laptop Repair, OS Formatting
+  [Peripherals & Setup]   : Printer & Peripheral Setup, Cable Management, Software Installation
+  [Networking & Security] : Basic Networking (TCP/IP), Router/Switch Config, Threat Mitigation, Wireshark
+  [Programming & XAI]     : Python (Basic), React.js & Flask (Academic), Random Forest, SHAP & LIME Explainability
+  [User Support]          : Friendly, Patient, and Professional Technical Support Delivery`,
 
     xai: `[EXPLAINABLE AI ARCHITECTURE — MalwareXAI]
-  • Model        : Random Forest Classifier (Scikit-Learn)
-  • Explainers   : SHAP (Shapley Additive exPlanations) + LIME (Local Interpretable Model-agnostic Explanations)
-  • Features     : PE Header byte entropy, DLL imports, section headers, opcodes
-  • Objective    : Provide interpretable, transparent attribution for detected malware threats.`,
-
-    '3d': `[3D WEBGL ENGINE SPECS]
-  • Core Library : Three.js WebGL
-  • Particles    : 1,400+ Interactive Cyber Starfield Points with Parallax Tracking
-  • Mesh Objects : Floating Wireframe Icosahedron & Octahedron Core
-  • Physics      : Real-time 3D Mouse Tilt & Raycast Parallax`,
+  • Academic Project : MalwareXAI (Developed using React.js, Flask, Random Forest, SHAP & LIME)
+  • Model            : Random Forest Classifier (Scikit-Learn)
+  • Explainers       : SHAP (Shapley Additive exPlanations) + LIME (Local Interpretable Model-agnostic Explanations)
+  • Target           : Windows Executable (.exe) binary classification with transparent feature attribution.`,
 
     projects: `Featured Projects:
-  1. MalwareXAI              - AI Malware Detection with Random Forest + SHAP & LIME Explainability
-  2. Halwan Lost & Found     - Full-Stack PHP/MySQL Portal with Bcrypt, CSRF, & Prepared Statements
+  1. MalwareXAI              - Explainable AI Malware Detection with Random Forest + SHAP & LIME
+  2. Halwan Lost & Found     - Full-Stack Community Platform with Bcrypt, CSRF, & Prepared Statements
   3. CyberMetrics React App  - Real-Time Security Operations Dashboard (React.js + Flask)
-  4. CyberSentinel           - Automated OWASP Top 10 Web Vulnerability Scanner (Python/C++)
-  5. SecureGate              - Cryptographic 2FA & JWT Authentication Microservice
-  6. NetTrace                - High-Performance C++ & Python Raw Packet Sniffer`,
+  4. CyberSentinel Scanner   - Automated Web Vulnerability Scanner
+  5. NetTrace Sniffer        - Low-Level Network Packet Sniffer`,
 
     contact: `Contact Muhammad Farhan:
-  • Email     : farhan@mypersonalwebsite.com
-  • Website   : mypersonalwebsite.com
-  • LinkedIn  : linkedin.com/in/muhammad-farhan
-  • GitHub    : github.com/muhammad-farhan
-  • Status    : Open for Full-Time & Consulting Roles`,
+  • Location  : Dubai, United Arab Emirates
+  • Mobile    : +971 52 153 5928
+  • Email     : syedfarhansaif@gmail.com
+  • CV File   : assets/Muhammad_Farhan_CV.pdf
+  • Status    : Actively available for IT Support & Cybersecurity Roles in UAE`,
 
-    scan: `[INITIALIZING SECURITY AUDIT SCAN]
-Connecting to target endpoint... [OK]
-Checking HTTP Security Headers (CSP, HSTS, X-Frame)... [SECURE]
-Testing for SQL Injection vulnerabilities... [CLEAN - Prepared Statements Active]
-Checking for Cross-Site Scripting (XSS) vectors... [PROTECTED]
-Auditing CSRF Token Protection... [VERIFIED]
-Auditing Password Hashing Schemes... [PASS - Bcrypt Active]
-Auditing File-Upload Validation Pipeline... [PASS - MIME & EXIF Checks Active]
-Checking 3D WebGL GPU Memory & Buffer Security... [SECURE]
-Scanning open ports & services... [FILTERED]
+    scan: `[INITIALIZING SYSTEM & NETWORK DIAGNOSTIC SCAN]
+Checking Windows OS & Registry Health... [OK]
+Auditing TCP/IP Network Interfaces... [ONLINE]
+Testing Hardware Integrity (RAM, Storage, CPU)... [HEALTHY]
+Checking Security Protocols & Antivirus Status... [ACTIVE]
+Auditing Password Security & Account Protections... [PASS - Bcrypt Protected]
 
->>> AUDIT SUMMARY: 0 Critical, 0 High, 0 Medium issues found.
->>> SECURITY HEALTH SCORE: 100% (OWASP Benchmark Compliant)`
+>>> SYSTEM HEALTH SCORE: 100% (All Workstation Components Operational)`
   };
 
   terminalInput.addEventListener('keydown', (e) => {
@@ -710,27 +445,34 @@ Scanning open ports & services... [FILTERED]
 }
 
 /* ==========================================================================
-   11. CONTACT FORM HANDLER WITH VALIDATION & TOASTS
+   8. CONTACT FORM HANDLER (WITH REAL EMAIL NOTIFICATION TO syedfarhansaif@gmail.com)
    ========================================================================== */
 function initContactForm() {
   const contactForm = document.getElementById('contact-form');
-  const submitBtn = document.getElementById('submit-btn');
-  const btnText = document.getElementById('btn-text');
-  const btnIcon = document.getElementById('btn-icon');
-  const btnSpinner = document.getElementById('btn-spinner');
-
   if (!contactForm) return;
 
-  contactForm.addEventListener('submit', (e) => {
+  const submitBtn = document.getElementById('contact-submit-btn') || document.getElementById('submit-btn') || contactForm.querySelector('button[type="submit"]');
+  const btnText = submitBtn ? submitBtn.querySelector('.btn-text') || submitBtn : null;
+  const btnIcon = submitBtn ? submitBtn.querySelector('i') : null;
+  const btnSpinner = submitBtn ? submitBtn.querySelector('.spinner-loader') : null;
+
+  contactForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const name = document.getElementById('contact-name').value.trim();
-    const email = document.getElementById('contact-email').value.trim();
-    const subject = document.getElementById('contact-subject').value;
-    const message = document.getElementById('contact-message').value.trim();
+    const nameInput = document.getElementById('contact-name');
+    const emailInput = document.getElementById('contact-email');
+    const mobileInput = document.getElementById('contact-mobile');
+    const subjectInput = document.getElementById('contact-subject');
+    const messageInput = document.getElementById('contact-message');
 
-    if (!name || !email || !subject || !message) {
-      showToast('Please fill out all required fields.', 'error');
+    const name = nameInput ? nameInput.value.trim() : '';
+    const email = emailInput ? emailInput.value.trim() : '';
+    const mobile = mobileInput ? mobileInput.value.trim() : '';
+    const subject = subjectInput ? subjectInput.value.trim() : 'Portfolio Contact Message';
+    const message = messageInput ? messageInput.value.trim() : '';
+
+    if (!name || !email || !message) {
+      showToast('Please fill out Name, Email, and Message.', 'error');
       return;
     }
 
@@ -740,45 +482,179 @@ function initContactForm() {
       return;
     }
 
-    btnText.textContent = 'Encrypting & Sending...';
-    btnIcon.style.display = 'none';
-    btnSpinner.style.display = 'inline-block';
-    submitBtn.disabled = true;
+    if (btnText) btnText.textContent = 'Sending...';
+    if (btnIcon) btnIcon.style.display = 'none';
+    if (btnSpinner) btnSpinner.style.display = 'inline-block';
+    if (submitBtn) submitBtn.disabled = true;
 
-    setTimeout(() => {
-      btnText.textContent = 'Message Sent!';
-      btnSpinner.style.display = 'none';
+    // Send via Web3Forms API
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: '23e803c6-2c5e-47f6-b184-4d8cb845b5fe', // Public Web3Forms forwarder key
+          name: name,
+          email: email,
+          phone: mobile || 'Not specified',
+          subject: subject,
+          message: message,
+          from_name: `${name} (via Farhan Portfolio)`,
+          to_email: 'syedfarhansaif@gmail.com'
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.status === 200 || result.success) {
+        showSuccessState(name);
+      } else {
+        // Fallback: direct mailto client opening
+        triggerMailtoFallback(name, email, mobile, subject, message);
+      }
+    } catch (err) {
+      // Offline fallback
+      triggerMailtoFallback(name, email, mobile, subject, message);
+    }
+  });
+
+  function showSuccessState(name) {
+    if (btnText) btnText.textContent = 'Message Sent!';
+    if (btnSpinner) btnSpinner.style.display = 'none';
+    if (btnIcon) {
       btnIcon.className = 'fa-solid fa-check';
       btnIcon.style.display = 'inline-block';
+    }
 
-      showToast(`Thank you, ${name}! Your secure message has been received. I'll reply to ${email} shortly.`, 'success');
+    showToast(`Thank you, ${name}! Your message has been sent to syedfarhansaif@gmail.com.`, 'success');
+    contactForm.reset();
 
-      contactForm.reset();
-
-      setTimeout(() => {
-        btnText.textContent = 'Send Message';
+    setTimeout(() => {
+      if (btnText) btnText.textContent = 'Send Message';
+      if (btnIcon) {
         btnIcon.className = 'fa-solid fa-paper-plane';
-        submitBtn.disabled = false;
-      }, 3000);
+        btnIcon.style.display = 'inline-block';
+      }
+      if (submitBtn) submitBtn.disabled = false;
+    }, 3500);
+  }
 
-    }, 1200);
-  });
+  function triggerMailtoFallback(name, email, mobile, subject, message) {
+    if (btnSpinner) btnSpinner.style.display = 'none';
+    if (btnText) btnText.textContent = 'Opening Email...';
+
+    const mailtoBody = encodeURIComponent(`From: ${name}\nEmail: ${email}\nPhone: ${mobile}\n\nMessage:\n${message}`);
+    const mailtoUrl = `mailto:syedfarhansaif@gmail.com?subject=${encodeURIComponent(subject)}&body=${mailtoBody}`;
+    
+    window.location.href = mailtoUrl;
+
+    showToast(`Opening your email client to send message to syedfarhansaif@gmail.com`, 'info');
+    contactForm.reset();
+
+    setTimeout(() => {
+      if (btnText) btnText.textContent = 'Send Message';
+      if (btnIcon) {
+        btnIcon.className = 'fa-solid fa-paper-plane';
+        btnIcon.style.display = 'inline-block';
+      }
+      if (submitBtn) submitBtn.disabled = false;
+    }, 3500);
+  }
 }
 
 /* ==========================================================================
-   12. RESUME / CV DOWNLOAD TRIGGER
+   9. CV DOWNLOAD TRIGGER
    ========================================================================== */
 function initDownloadCV() {
   const downloadBtn = document.getElementById('download-cv-btn');
   if (!downloadBtn) return;
 
   downloadBtn.addEventListener('click', () => {
-    showToast('Muhammad Farhan Resume / CV PDF is ready! (Placeholder linked)', 'info');
+    showToast('Muhammad Farhan CV / Resume is ready for download.', 'info');
   });
 }
 
 /* ==========================================================================
-   13. TOAST NOTIFICATION UTILITY
+   10. THREE.JS 3D BACKGROUND
+   ========================================================================== */
+function initThreeJSBackground() {
+  const canvas = document.getElementById('bg-3d-canvas');
+  if (!canvas || typeof THREE === 'undefined') return;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+  camera.position.z = 500;
+
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // Particle System
+  const particleCount = 800;
+  const geometry = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+
+  const cyan = new THREE.Color(0x00eeff);
+  const green = new THREE.Color(0x10b981);
+
+  for (let i = 0; i < particleCount * 3; i += 3) {
+    positions[i] = (Math.random() - 0.5) * 1400;
+    positions[i + 1] = (Math.random() - 0.5) * 1400;
+    positions[i + 2] = (Math.random() - 0.5) * 1000;
+
+    const chosenColor = Math.random() < 0.65 ? cyan : green;
+    colors[i] = chosenColor.r;
+    colors[i + 1] = chosenColor.g;
+    colors[i + 2] = chosenColor.b;
+  }
+
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const material = new THREE.PointsMaterial({
+    size: 2.8,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.65,
+    blending: THREE.AdditiveBlending
+  });
+
+  const particles = new THREE.Points(geometry, material);
+  scene.add(particles);
+
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', (e) => {
+    mouseX = (e.clientX - window.innerWidth / 2) * 0.15;
+    mouseY = (e.clientY - window.innerHeight / 2) * 0.15;
+  });
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    particles.rotation.y += 0.0008;
+    particles.rotation.x += 0.0004;
+
+    camera.position.x += (mouseX - camera.position.x) * 0.03;
+    camera.position.y += (-mouseY - camera.position.y) * 0.03;
+    camera.lookAt(scene.position);
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+}
+
+/* ==========================================================================
+   11. TOAST UTILITY
    ========================================================================== */
 function showToast(message, type = 'info') {
   const container = document.getElementById('toast-container');
@@ -787,9 +663,9 @@ function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.className = `toast ${type}`;
 
-  let iconHtml = '<i class="fa-solid fa-info-circle" style="color:var(--accent-cyan);"></i>';
+  let iconHtml = '<i class="fa-solid fa-info-circle" style="color:var(--main-color);"></i>';
   if (type === 'success') {
-    iconHtml = '<i class="fa-solid fa-circle-check" style="color:var(--accent-green);"></i>';
+    iconHtml = '<i class="fa-solid fa-circle-check" style="color:#10b981;"></i>';
   } else if (type === 'error') {
     iconHtml = '<i class="fa-solid fa-triangle-exclamation" style="color:#ef4444;"></i>';
   }

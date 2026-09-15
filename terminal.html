@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Terminal | Muhammad Farhan</title>
+  <meta name="description" content="Interactive Cyber Terminal of Muhammad Farhan — Junior Cybersecurity Analyst & Full-Stack Developer.">
+  <meta name="author" content="Muhammad Farhan">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Fullscreen 3D Background WebGL Canvas -->
+  <canvas id="bg-3d-canvas" class="bg-3d-canvas"></canvas>
+
+  <!-- SEPARATE FIXED HEADER NAVIGATION -->
+  <header class="header" id="header">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-txt">Portfolio</span><span class="logo-dot">.</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="about.html" class="nav-item">About</a>
+        <a href="services.html" class="nav-item">Services</a>
+        <a href="portfolio.html" class="nav-item">Portfolio</a>
+        <a href="terminal.html" class="nav-item active">Terminal</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+      </nav>
+
+      <!-- Nav Controls -->
+      <div class="nav-controls">
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
+          <i class="fa-solid fa-moon dark-icon"></i>
+          <i class="fa-solid fa-sun light-icon"></i>
+        </button>
+
+        <button id="menu-icon" class="menu-icon" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- TERMINAL SECTION PAGE -->
+    <section class="page-section" id="terminal-page">
+      <h2 class="heading">Cyber <span>Terminal</span></h2>
+
+      <p class="terminal-page-subtitle">
+        Type commands directly to interact with Muhammad Farhan's live simulated shell environment.
+      </p>
+
+      <div class="terminal-box dedicated-terminal">
+        <div class="terminal-bar">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="terminal-title"><i class="fa-solid fa-terminal"></i> farhan@cyber-node: ~ (bash)</div>
+          <span class="terminal-status"><span class="pulse-dot"></span> 3D ONLINE</span>
+        </div>
+
+        <div class="terminal-screen" id="terminal-body" style="min-height: 38rem;">
+          <div class="terminal-output" id="terminal-output">
+            <p class="term-welcome">
+              ============================================================<br>
+              MUHAMMAD FARHAN — INTERACTIVE CYBERSECURITY TERMINAL v3.5<br>
+              ============================================================<br>
+              Available commands:<br>
+              • <span class="term-cmd">help</span>       : Show list of commands<br>
+              • <span class="term-cmd">whoami</span>     : Display bio and identity<br>
+              • <span class="term-cmd">skills</span>     : View technical skills matrix<br>
+              • <span class="term-cmd">xai</span>        : Explainable AI architecture (SHAP & LIME)<br>
+              • <span class="term-cmd">projects</span>   : List flagship projects (MalwareXAI, Halwan Portal)<br>
+              • <span class="term-cmd">scan</span>       : Run simulated OWASP vulnerability check<br>
+              • <span class="term-cmd">contact</span>    : Display direct email & contact links<br>
+              • <span class="term-cmd">clear</span>      : Clear screen<br>
+              ------------------------------------------------------------
+            </p>
+          </div>
+
+          <div class="terminal-input-line">
+            <span class="term-prompt"><span class="text-green">farhan@cyber</span>:<span class="text-cyan">~</span>$&nbsp;</span>
+            <input type="text" id="terminal-input" class="term-input" autocomplete="off" spellcheck="false" placeholder="Type a command (e.g. help, whoami, xai, scan)...">
+          </div>
+        </div>
+      </div>
+
+      <div class="terminal-command-hints">
+        <span>Quick click to run:</span>
+        <button class="hint-btn term-cmd">whoami</button>
+        <button class="hint-btn term-cmd">skills</button>
+        <button class="hint-btn term-cmd">xai</button>
+        <button class="hint-btn term-cmd">projects</button>
+        <button class="hint-btn term-cmd">scan</button>
+        <button class="hint-btn term-cmd">contact</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-text">
+      <p>Copyright &copy; 2026 by Muhammad Farhan | All Rights Reserved.</p>
+    </div>
+
+    <div class="footer-email-link">
+      <i class="fa-regular fa-envelope"></i> <a href="mailto:syedfarhansaif@gmail.com">syedfarhansaif@gmail.com</a>
+    </div>
+
+    <div class="footer-iconTop">
+      <a href="#terminal-page" title="Back to Top"><i class="fa-solid fa-arrow-up"></i></a>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

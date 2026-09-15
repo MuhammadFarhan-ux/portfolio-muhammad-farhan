@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Me | Muhammad Farhan</title>
+  <meta name="description" content="About Muhammad Farhan — Junior Cybersecurity Analyst & Full-Stack Developer with 2 years of professional web experience.">
+  <meta name="author" content="Muhammad Farhan">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Fullscreen 3D Background WebGL Canvas -->
+  <canvas id="bg-3d-canvas" class="bg-3d-canvas"></canvas>
+
+  <!-- SEPARATE FIXED HEADER NAVIGATION -->
+  <header class="header" id="header">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-txt">Portfolio</span><span class="logo-dot">.</span>
+      </a>
+
+      <!-- Navigation Links -->
+      <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="about.html" class="nav-item active">About</a>
+        <a href="services.html" class="nav-item">Services</a>
+        <a href="portfolio.html" class="nav-item">Portfolio</a>
+        <a href="terminal.html" class="nav-item">Terminal</a>
+        <a href="contact.html" class="nav-item">Contact</a>
+      </nav>
+
+      <!-- Nav Controls -->
+      <div class="nav-controls">
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme">
+          <i class="fa-solid fa-moon dark-icon"></i>
+          <i class="fa-solid fa-sun light-icon"></i>
+        </button>
+
+        <button id="menu-icon" class="menu-icon" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ABOUT SECTION PAGE -->
+    <section class="page-section" id="about-page">
+      <h2 class="heading">About <span>Me</span></h2>
+
+      <div class="about-page-container">
+        
+        <!-- GLOWING CYAN HEXAGON WITH FARHAN'S PICTURE -->
+        <div class="about-img">
+          <div class="hexagon-wrapper">
+            <div class="hexagon-glow"></div>
+            <div class="hexagon-shape">
+              <div class="avatar-inner about-avatar-bg">
+                <img src="assets/profile.jpg" alt="Muhammad Farhan" class="avatar-photo">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-content">
+          <h3>IT Support Technician & Cybersecurity Analyst!</h3>
+          <p>
+            Hello! I am <strong>Muhammad Farhan (M Farhan)</strong>, based in <strong>Dubai, UAE</strong>. I am a motivated IT Support Technician and aspiring Cybersecurity Analyst with practical hands-on experience in computer hardware, software installation, troubleshooting, and user support.
+          </p>
+          <p>
+            During my internship at <strong>SRS Computing LLC</strong>, I diagnosed and resolved hardware/software issues, performed OS installations (Windows 10/11), repaired desktop and laptop computers, configured printers, peripherals, and basic TCP/IP network devices, and delivered friendly customer support.
+          </p>
+          <p>
+            While my primary focus is IT systems and cybersecurity, I leverage <strong>AI-assisted design and development tools</strong> to craft intuitive, modern user interfaces and full-stack web applications. I architected <strong>MalwareXAI</strong> (an Explainable AI malware detection application using Random Forest, SHAP, and LIME) and the <strong>Halwan Lost & Found Portal</strong> (with secure RBAC, bcrypt auth, and CSRF defense).
+          </p>
+
+          <div class="about-contact-pill">
+            <i class="fa-solid fa-location-dot"></i>
+            <span><strong>Dubai, UAE</strong> &bull; <i class="fa-solid fa-phone"></i> +971 52 153 5928</span>
+            <button class="copy-email-chip copy-email-btn" data-email="syedfarhansaif@gmail.com">
+              <i class="fa-regular fa-copy"></i> Copy Email
+            </button>
+          </div>
+
+          <div class="about-btn-row">
+            <a href="assets/Muhammad_Farhan_CV.pdf" download="Muhammad_Farhan_CV.pdf" class="btn" title="Download Official CV">
+              <i class="fa-solid fa-file-arrow-down"></i> Download CV (PDF)
+            </a>
+            <a href="portfolio.html" class="btn btn-secondary">See Projects (2)</a>
+            <a href="contact.html" class="btn btn-outline">Get in Touch</a>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Experience & Foundation Timeline -->
+      <div class="about-details-section">
+        <h3 class="sub-heading">Experience & <span>Credentials (From CV)</span></h3>
+
+        <div class="about-timeline-grid">
+          
+          <div class="timeline-box">
+            <div class="timeline-icon"><i class="fa-solid fa-briefcase"></i></div>
+            <div class="timeline-content-box">
+              <h4>IT Support Intern</h4>
+              <span class="timeline-time">SRS Computing LLC &bull; 6 Months</span>
+              <p>
+                Diagnosed and resolved hardware/software issues. Installed Windows 10/11 operating systems & applications. Repaired & upgraded desktop/laptop PCs. Configured printers, peripherals, and network devices. Performed maintenance & delivered professional user support.
+              </p>
+            </div>
+          </div>
+
+          <div class="timeline-box">
+            <div class="timeline-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            <div class="timeline-content-box">
+              <h4>BSc: Cybersecurity</h4>
+              <span class="timeline-time">De Montfort University – Dubai &bull; 09/2025</span>
+              <p>
+                Academic cybersecurity degree in Dubai Al Sufouh second, UAE. Specialized in network security (TCP/IP), threat mitigation, security systems, and explainable AI algorithms. Holds <strong>HND</strong> and <strong>Pearson BTEC Level 3 Diploma</strong>.
+              </p>
+            </div>
+          </div>
+
+          <div class="timeline-box">
+            <div class="timeline-icon"><i class="fa-solid fa-laptop-code"></i></div>
+            <div class="timeline-content-box">
+              <h4>Flagship Projects: MalwareXAI & Halwan</h4>
+              <span class="timeline-time">Explainable AI & Full-Stack Platform</span>
+              <p>
+                Creator of <strong>MalwareXAI</strong> (Explainable AI malware classification for Windows PE files using Random Forest, SHAP & LIME) and <strong>Halwan Lost & Found Portal</strong> (Full-stack PHP/MySQL with role-based access control).
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-text">
+      <p>Copyright &copy; 2026 by Muhammad Farhan | All Rights Reserved.</p>
+    </div>
+
+    <div class="footer-email-link">
+      <i class="fa-regular fa-envelope"></i> <a href="mailto:syedfarhansaif@gmail.com">syedfarhansaif@gmail.com</a>
+    </div>
+
+    <div class="footer-iconTop">
+      <a href="#about-page" title="Back to Top"><i class="fa-solid fa-arrow-up"></i></a>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

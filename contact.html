@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Muhammad Farhan | Cybersecurity & Full-Stack Developer</title>
+  <meta name="description" content="Get in touch with Muhammad Farhan (M Farhan) — Junior Cybersecurity Analyst and Full-Stack Developer. Direct email: syedfarhansaif@gmail.com">
+  <meta name="author" content="Muhammad Farhan">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Contact Muhammad Farhan">
+  <meta property="og:description" content="Reach out to Muhammad Farhan for cybersecurity assessments, Explainable AI projects, or full-stack web development.">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Fullscreen 3D Background WebGL Canvas -->
+  <canvas id="bg-3d-canvas" class="bg-3d-canvas"></canvas>
+
+  <!-- SEPARATE FIXED HEADER NAVIGATION -->
+  <header class="header" id="header">
+    <div class="nav-container">
+      <a href="index.html" class="logo">
+        <span class="logo-txt">Portfolio</span><span class="logo-dot">.</span>
+      </a>
+
+      <!-- Navigation Links to Dedicated Pages -->
+      <nav class="navbar" id="navbar">
+        <a href="index.html" class="nav-item">Home</a>
+        <a href="about.html" class="nav-item">About</a>
+        <a href="services.html" class="nav-item">Services</a>
+        <a href="portfolio.html" class="nav-item">Portfolio</a>
+        <a href="terminal.html" class="nav-item">Terminal</a>
+        <a href="contact.html" class="nav-item active">Contact</a>
+      </nav>
+
+      <!-- Nav Controls: Theme Switch & Mobile Menu Toggle -->
+      <div class="nav-controls">
+        <button id="theme-toggle" class="theme-btn" aria-label="Toggle Dark/Light Mode" title="Toggle Theme (Auto Dark/Light enabled)">
+          <i class="fa-solid fa-moon dark-icon"></i>
+          <i class="fa-solid fa-sun light-icon"></i>
+        </button>
+
+        <button id="menu-icon" class="menu-icon" aria-label="Toggle Navigation">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- CONTACT SECTION PAGE -->
+    <section class="page-section" id="contact-page">
+      <h2 class="heading">Contact <span>Me!</span></h2>
+      <p class="section-lead">
+        Have an IT support requirement, full-stack web project, or cybersecurity inquiry? Reach out directly or send a message below.
+      </p>
+
+      <div class="contact-layout-container">
+        
+        <!-- Left Column: Contact Cards & Details -->
+        <div class="contact-info-cards">
+          
+          <!-- Direct Email Card -->
+          <div class="info-card">
+            <div class="info-card-icon">
+              <i class="fa-solid fa-envelope"></i>
+            </div>
+            <div class="info-card-body">
+              <h4>Direct Email</h4>
+              <p class="email-address-text">syedfarhansaif@gmail.com</p>
+              <div class="info-card-actions">
+                <a href="mailto:syedfarhansaif@gmail.com" class="btn btn-outline btn-sm">
+                  <i class="fa-solid fa-paper-plane"></i> Send Email
+                </a>
+                <button class="btn btn-outline btn-sm copy-email-btn" data-email="syedfarhansaif@gmail.com" title="Copy Email">
+                  <i class="fa-regular fa-copy"></i> Copy
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Phone & Location Card -->
+          <div class="info-card">
+            <div class="info-card-icon">
+              <i class="fa-solid fa-phone"></i>
+            </div>
+            <div class="info-card-body">
+              <h4>Phone & Location</h4>
+              <p class="email-address-text">+971 52 153 5928</p>
+              <p style="margin-bottom: 1rem;"><i class="fa-solid fa-location-dot"></i> Dubai, United Arab Emirates</p>
+              <div class="info-card-actions">
+                <a href="https://wa.me/971521535928" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                  <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+                <a href="tel:+971521535928" class="btn btn-outline btn-sm">
+                  <i class="fa-solid fa-phone"></i> Call
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Professional Profiles Card -->
+          <div class="info-card">
+            <div class="info-card-icon">
+              <i class="fa-solid fa-globe"></i>
+            </div>
+            <div class="info-card-body">
+              <h4>Connect Online</h4>
+              <p>Find my code repositories and professional updates.</p>
+              <div class="social-media contact-social-row">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" title="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="mailto:syedfarhansaif@gmail.com" title="Email Farhan"><i class="fa-solid fa-envelope"></i></a>
+                <a href="https://wa.me/971521535928" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Security & Availability Info -->
+          <div class="info-card highlight-card">
+            <div class="info-card-icon">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="info-card-body">
+              <h4>Response Time & CV</h4>
+              <p>Average response within <strong>24 hours</strong>. Open for IT Support & Cybersecurity roles.</p>
+              <div class="badge-status-row" style="margin-bottom: 1.2rem;">
+                <span class="status-indicator-dot"></span>
+                <span>Available in Dubai, UAE</span>
+              </div>
+              <a href="assets/Muhammad_Farhan_CV.pdf" download="Muhammad_Farhan_CV.pdf" class="btn btn-sm">
+                <i class="fa-solid fa-file-arrow-down"></i> Download Full CV (PDF)
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Column: Interactive Contact Form -->
+        <div class="contact-form-wrapper">
+          <form id="contact-form" class="contact-form-page" action="https://api.web3forms.com/submit" method="POST" autocomplete="off">
+            <!-- Web3Forms Config (Auto forwards to syedfarhansaif@gmail.com) -->
+            <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY_OR_DEFAULT">
+            <input type="hidden" name="to_email" value="syedfarhansaif@gmail.com">
+            <input type="hidden" name="from_name" value="Portfolio Contact Form">
+            
+            <div class="input-box">
+              <div class="input-group">
+                <label for="contact-name"><i class="fa-regular fa-user"></i> Full Name</label>
+                <input type="text" id="contact-name" name="name" placeholder="Muhammad Farhan" required>
+              </div>
+              <div class="input-group">
+                <label for="contact-email"><i class="fa-regular fa-envelope"></i> Email Address</label>
+                <input type="email" id="contact-email" name="email" placeholder="yourname@domain.com" required>
+              </div>
+            </div>
+
+            <div class="input-box">
+              <div class="input-group">
+                <label for="contact-mobile"><i class="fa-solid fa-phone"></i> Mobile / WhatsApp</label>
+                <input type="tel" id="contact-mobile" name="mobile" placeholder="+971 52 153 5928">
+              </div>
+              <div class="input-group">
+                <label for="contact-subject"><i class="fa-solid fa-tag"></i> Subject</label>
+                <input type="text" id="contact-subject" name="subject" placeholder="IT Support Inquiry / Project" required>
+              </div>
+            </div>
+
+            <div class="input-group full-width">
+              <label for="contact-message"><i class="fa-regular fa-comment-dots"></i> Your Message</label>
+              <textarea id="contact-message" name="message" cols="30" rows="8" placeholder="Describe your project, IT requirements, or inquiry..." required></textarea>
+            </div>
+
+            <div class="contact-submit-row">
+              <button type="submit" id="contact-submit-btn" class="btn">
+                <span class="btn-text">Send Message</span>
+                <span class="spinner-loader"></span>
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-text">
+      <p>Copyright &copy; 2026 by Muhammad Farhan | All Rights Reserved.</p>
+    </div>
+
+    <div class="footer-email-link">
+      <i class="fa-regular fa-envelope"></i> <a href="mailto:syedfarhansaif@gmail.com">syedfarhansaif@gmail.com</a>
+    </div>
+
+    <div class="footer-iconTop">
+      <a href="#contact-page" title="Back to Top"><i class="fa-solid fa-arrow-up"></i></a>
+    </div>
+  </footer>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
