@@ -475,12 +475,13 @@ span {
   height: 36rem;
   background: var(--main-color);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  -webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 2;
   box-shadow: 0 0 35px var(--main-color);
-  padding: 0.5rem; /* Border thickness */
+  padding: 0.4rem; /* Border thickness */
 }
 
 /* Inner Hexagon Container with Avatar Content */
@@ -489,6 +490,7 @@ span {
   height: 100%;
   background: linear-gradient(145deg, #111827 0%, #1f293d 100%);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  -webkit-clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -497,11 +499,13 @@ span {
 }
 
 .avatar-photo {
+  display: block;
   width: 100%;
   height: 100%;
+  min-width: 100%;
+  min-height: 100%;
   object-fit: cover;
   object-position: center 15%;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   transition: transform 0.5s ease;
 }
 
@@ -1898,11 +1902,18 @@ span {
 
   /* Home Section */
   .home {
-    flex-direction: column-reverse;
+    flex-direction: column;
     text-align: center;
-    gap: 3.5rem;
+    gap: 2.5rem;
     padding-top: 10rem;
+    padding-bottom: 4rem;
     justify-content: center;
+    align-items: center;
+  }
+
+  .home-img {
+    order: -1; /* Puts the profile photo prominently at top on mobile */
+    margin-bottom: 0.5rem;
   }
 
   .home-content {
@@ -1927,13 +1938,13 @@ span {
   .home-content p {
     font-size: 1.5rem;
     line-height: 1.7;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.2rem;
     max-width: 100%;
   }
 
   .social-media {
     justify-content: center;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2.2rem;
     gap: 1.2rem;
   }
 
@@ -1943,38 +1954,52 @@ span {
     font-size: 2rem;
   }
 
+  /* Sleek, Professional Pill Button Groups on Mobile */
   .home-btn-group {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     width: 100%;
-    max-width: 32rem;
-    gap: 1.2rem;
-    align-items: stretch;
-    margin: 0 auto;
+    max-width: 48rem;
+    gap: 1rem;
+    margin: 0 auto 1.5rem;
   }
 
-  .home-btn-group .btn {
-    width: 100%;
+  .home-btn-group .btn,
+  .about-btn-row .btn,
+  .services-cta-btns .btn {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    text-align: center;
+    gap: 0.8rem;
+    padding: 1.1rem 2.2rem;
+    font-size: 1.4rem;
+    font-weight: 700 !important;
+    border-radius: 3rem;
+    box-shadow: 0 4px 15px rgba(0, 238, 255, 0.25);
+    white-space: nowrap;
+    width: auto;
   }
 
   /* Hexagon Scaling for Mobile */
   .hexagon-wrapper {
-    width: 25rem;
-    height: 27rem;
+    width: 24rem;
+    height: 26rem;
     max-width: 85vw;
     margin: 0 auto;
   }
 
   .hexagon-shape {
-    width: 23rem;
-    height: 25rem;
+    width: 22rem;
+    height: 24rem;
     max-width: 80vw;
   }
 
   .hexagon-glow {
-    width: 23rem;
-    height: 23rem;
+    width: 22rem;
+    height: 22rem;
     max-width: 80vw;
     filter: blur(25px);
   }
@@ -1984,10 +2009,16 @@ span {
   }
 
   /* About Section */
-  .about {
-    flex-direction: column-reverse;
+  .about,
+  .about-page-container {
+    flex-direction: column;
     text-align: center;
-    gap: 3.5rem;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .about-img {
+    order: -1; /* Puts the portrait on top on about page as well */
   }
 
   .about-content h2 {
@@ -2000,16 +2031,15 @@ span {
   }
 
   .about-btn-row {
-    flex-direction: column;
-    width: 100%;
-    max-width: 32rem;
-    margin: 0 auto;
-    gap: 1.2rem;
-  }
-
-  .about-btn-row .btn {
-    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 48rem;
+    margin: 1.5rem auto 0;
+    gap: 1rem;
   }
 
   /* Services Section */
@@ -2023,27 +2053,28 @@ span {
   }
 
   .services-cta-btns {
-    flex-direction: column;
-    width: 100%;
-    max-width: 32rem;
-    margin: 0 auto;
-    gap: 1.2rem;
-  }
-
-  .services-cta-btns .btn {
-    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 48rem;
+    margin: 1.5rem auto 0;
+    gap: 1rem;
   }
 
-  /* Portfolio Section Touch Optimized */
+  /* Portfolio Section Touch & Display Optimized */
   .portfolio-filters {
     gap: 0.8rem;
     margin-bottom: 2.5rem;
+    justify-content: center;
   }
 
   .filter-btn {
     padding: 0.8rem 1.6rem;
     font-size: 1.3rem;
+    border-radius: 2.5rem;
   }
 
   .portfolio-container,
@@ -2058,7 +2089,8 @@ span {
     height: auto !important;
     min-height: auto;
     flex-direction: column;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+    border-radius: 1.8rem;
   }
 
   .portfolio-thumb {
@@ -2076,6 +2108,7 @@ span {
   .portfolio-layer h4 {
     color: var(--text-color) !important;
     font-size: 2rem;
+    margin-bottom: 0.8rem;
   }
 
   .portfolio-layer p {
@@ -2083,6 +2116,12 @@ span {
     font-size: 1.4rem;
     margin-bottom: 1.8rem;
     line-height: 1.6;
+  }
+
+  .layer-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.2rem;
   }
 
   .layer-icon-btn {
@@ -2118,17 +2157,20 @@ span {
   .info-card-actions {
     width: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 0.8rem;
   }
 
   .info-card-actions .btn {
-    width: 100%;
+    display: inline-flex;
+    flex: 1;
+    min-width: 13rem;
     justify-content: center;
   }
 
   .contact-form-wrapper {
-    padding: 2.2rem 1.6rem;
+    padding: 2.5rem 1.8rem;
   }
 
   .contact-form .input-box,
@@ -2144,7 +2186,10 @@ span {
 
   .contact-form-page .btn,
   .contact-form .btn {
-    width: 100%;
+    display: inline-flex;
+    width: auto;
+    min-width: 20rem;
+    margin: 1rem auto 0;
     justify-content: center;
   }
 
@@ -2213,13 +2258,17 @@ span {
   }
 
   .modal-footer-btns {
-    flex-direction: column;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1rem;
     width: 100%;
   }
 
   .modal-footer-btns .btn {
-    width: 100%;
+    flex: 1;
+    min-width: 16rem;
     justify-content: center;
   }
 
@@ -2285,7 +2334,7 @@ span {
   }
 
   .btn {
-    font-size: 1.5rem;
-    padding: 1.1rem 2.2rem;
+    font-size: 1.4rem;
+    padding: 1rem 1.8rem;
   }
 }
